@@ -20,12 +20,14 @@ contract SetToken is StandardToken, AragonApp {
   // TODO - to remove this when I figure a better way to make this transient
   mapping(address => bool) addressExists;
 
+  uint256 totalCoins = 0;
+
   /**
    * @dev Constructor Function for the issuance of an {Set} token
    * @param _tokens address[] A list of token address which you want to include
    * @param _units uint[] A list of quantities of each token (corresponds to the {Set} of _tokens)
    */  
-  function SetToken(address[] _tokens, uint[] _units) public {
+  function SetToken(address[] _tokens, uint[] _units) {
     // There must be tokens present
     require(_tokens.length > 0);
     
@@ -68,7 +70,7 @@ contract SetToken is StandardToken, AragonApp {
     balances[msg.sender] = SafeMath.add(balances[msg.sender], quantity);
 
     // Increment the total token supply
-    totalSupply = SafeMath.add(totalSupply, quantity);
+    totalCoins = SafeMath.add(totalCoins, quantity);
 
     LogIssuance(msg.sender, quantity);
 
@@ -98,39 +100,19 @@ contract SetToken is StandardToken, AragonApp {
     balances[msg.sender] = SafeMath.sub(balances[msg.sender], quantity);
 
     // Decrement the total token supply
-    totalSupply = SafeMath.sub(totalSupply, quantity);
+    totalCoins = SafeMath.sub(totalCoins, quantity);
 
     LogRedemption(msg.sender, quantity);
 
     return true;
   }
 
-  function checkNoDuplicateAddresses(address[] _addresses) internal constant returns (bool noDuplicate) {
-    // Question - how do you instantiate a function from a library?
-    // Also is it possible to have local mappings?
-    // Can I use a struct instead?
-    /*
-    mapping(address => bool) memory addressExists;
+  function size () external view returns (uint) {
+     return tokens.length;
+  }
 
-    for (uint i = 0; i < _addresses.length; i++) {
-      address currentAddress = _addresses[i];
-
-      if (addressExists[currentAddress]) {
-        return false;
-      }
-
-      addressExists[currentAddress] = true;
-    }
-    */
-    /*
-    for (uint i = 0; i < _addresses.length; i++) {
-       address curAddr = _addresses[i];
-       for (ujnt j = 0; j < _addresses.length; j++) {
-          if (i != j && curAddr == addresses[j])
-       }
-    }
-    */
-
-    return true;
+  function totalSupply() public view returns (uint256) {
+     return totalCoins;
   }
 }
+

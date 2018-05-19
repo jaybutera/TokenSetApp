@@ -1,7 +1,8 @@
 pragma solidity ^0.4.11;
 
 
-import './ERC20Basic.sol';
+//import './ERC20Basic.sol';
+import '@aragon/os/contracts/lib/zeppelin/token/ERC20Basic.sol';
 import './SafeMath.sol';
 
 
